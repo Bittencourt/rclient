@@ -30,7 +30,8 @@ r "print(p2)"
 r "print(getwd())"
 r "ggsave(file = 'p2.png', plot = p2, width = 4, height = 4)"
 --]]
-r [[p1 <- ggplot(samples, aes(x = V1)) + geom_histogram()
+r [[
+p1 <- ggplot(samples, aes(x = V1)) + geom_histogram()
 print(p1)
 ggsave(file = 'p3.png', plot = p1, width = 4, height = 4)
 p2 <- ggplot(samples, aes(x = V2)) + geom_histogram()
@@ -38,4 +39,3 @@ print(p2)
 print(getwd())
 ggsave(file = 'p4.png', plot = p2, width = 4, height = 4)
 ]]
-
