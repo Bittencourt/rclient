@@ -7,9 +7,11 @@ package manager and use the following R code:
 Please refer to the Rserve documentation informations on how to use a different port number and/or enable remote connections. The following code snippet is intended to give an idea of the functionalities that are offered by this library.
 --]]
 
+require 'lfs'
 local R = require "rclient"
- 
-local r = R.connect() -- Connect to a R session.
+
+local r = R.start_and_connect()
+
 r "library(ggplot2)"  -- Load ggplot2 package.
 
 local N = 1000
@@ -30,12 +32,14 @@ r "print(p2)"
 r "print(getwd())"
 r "ggsave(file = 'p2.png', plot = p2, width = 4, height = 4)"
 --]]
+r(string.format("setwd('%s')", lfs.currentdir()))
 r [[
 p1 <- ggplot(samples, aes(x = V1)) + geom_histogram()
-print(p1)
+print(p1) 
 ggsave(file = 'p3.png', plot = p1, width = 4, height = 4)
 p2 <- ggplot(samples, aes(x = V2)) + geom_histogram()
 print(p2)
-print(getwd())
 ggsave(file = 'p4.png', plot = p2, width = 4, height = 4)
 ]]
+
+os.execute("sleep 5")

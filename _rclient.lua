@@ -609,12 +609,12 @@ function rconn_mt:__newindex(k, v)
   resp(self._sconn)
 end
 
-connect = function(address, port)
+local connect = function(address, port)
   address = address or "localhost"
   port = port or 6311
   local sconn, serr = sok.connect(address, port)
   if not sconn then
-    err("error", serr)
+    err("error: have you started Rserver?", serr)
   end
   local id, serr = sconn:receive(32)
   if not id then 
@@ -623,6 +623,17 @@ connect = function(address, port)
   id = id:sub(1, 12)
   chk(id == "Rsrv0103QAP1", "error", "expected version Rsrv0103QAP1, got ", id)
   return setmetatable({ _sconn = sconn }, rconn_mt)
+end
+
+local function start_and_connect()
+    local success, r = pcall(connect) -- Connect to a R session.
+    if not success then
+        print("Connection to R failed, trying to start Rserve...")
+        os.execute("R CMD Rserve")
+        r = R.connect()
+        print("...connexion succeeded")
+    end
+    return r
 end
 
 local function list(names, values)
@@ -698,6 +709,7 @@ end
 
 return {
   connect    = connect,
+  start_and_connect = start_and_connect,
   attributes = attributes,
   with       = with,
   vec        = vec,
