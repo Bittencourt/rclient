@@ -660,6 +660,18 @@ local function matrix(values, nrow, ncol)
   return with({ dim = int{nrow, ncol} }, o)
 end
 
+local function torchmatrix(values, nrow, ncol)
+  local o = {}
+  nrow = nrow or values:size(1)
+  ncol = ncol or values:size(2)
+  for c=1,ncol do
+    for r=1,nrow do
+      o[#o+1] = values[r][c]
+    end
+  end
+  return with({ dim = int{nrow, ncol} }, o)
+end
+
 local function tomap(x)
   local names = attributes(x).names
   assert(names)
@@ -695,6 +707,7 @@ return {
   list       = list,
   dataframe  = dataframe,
   matrix     = matrix,
+  torchmatrix= torchmatrix,
   
   tomap      = tomap,
   to2darray  = to2darray,
